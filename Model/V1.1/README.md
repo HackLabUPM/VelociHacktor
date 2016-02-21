@@ -1,0 +1,1 @@
+<img src= "assembly.jpg" width 400>
