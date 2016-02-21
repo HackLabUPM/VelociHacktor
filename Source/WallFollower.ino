@@ -1,15 +1,11 @@
-int motor1fwd = 5;
-int motor1bck = 6;
-int motor2fwd = 9;
-int motor2bck = 10;
 int sensorfwd = A0;
 int sensorright = A1;
-int dist_min = 10;
+int min_distance = 10;
 
-void mover(int v1, int v2)
+void move(int v1, int v2)
 {
 }
-int leer(int sensor)
+int readSensor(int sensor)
 {
 	int lectura, cm;
 	lectura = analogRead (sensor);
@@ -25,22 +21,22 @@ void setup()
  	pinMode (motor2bck, OUTPUT);
  	Serial.begin(9600);
 
- 	mover (50, 50);
+ 	move (50, 50);
 }
 
 void loop()
 {
-	if (leer(sensorfwd) < dist_min)
+	if (readSensor(sensorfwd) < min_distance)
 	{
-		if (leer(sensorright) < dist_min)
-			mover (-50, 50);
+		if (readSensor(sensorright) < min_distance)
+			move (-50, 50);
 		else
-			mover (50, -50);
+			move (50, -50);
 	}
 
-	else if (leer(sensorright) < dist_min)
-		mover (0, 50);
+	else if (readSensor(sensorright) < min_distance)
+		move (0, 50);
 
-	else if (leer(sensorright) > dist_min)
-		mover (50, 0);
+	else if (readSensor(sensorright) > min_distance)
+		move (50, 0);
 }
