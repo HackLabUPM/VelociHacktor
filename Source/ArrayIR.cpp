@@ -115,7 +115,7 @@ void ArrayIR::Calibrate (char ledCalibrate)
     {
         tic = millis();
         toc = tic;
-        if (toc-tic > 500)
+        if (toc-tic > LECTURE_TIME)
         {
             if (ledCalibrate!=-1)
                 digitalWrite(ledCalibrate, HIGH);
@@ -174,7 +174,7 @@ void ArrayIR::Calibrate (char ledCalibrate)
 
     tic = millis();
     toc = tic;
-    while (tic-toc<2000)
+    while (tic-toc<CALIB_CONFIRMATION)
         digitalWrite(ledCalibrate, HIGH);
     digitalWrite(ledCalibrate, LOW);
 
