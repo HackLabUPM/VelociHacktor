@@ -16,12 +16,14 @@ class ArrayIR {
 		unsigned int sensorValue[DIM_ARRAY];
 		int lastValue; 
 
+		//reads the analogPin of the sensor, takes N_SAMPLES measures and does the average. Then maps them between 0 and 1000
 		void calibrate (char ledCalibrate);
 		void read ();
 
 	public:
 		~ArrayIR();
-		ArrayIR(unsigned char* _pins, char ledCalibrate = -1) //, unsigned int _white, unsigned int _black);
-		//reads the analogPin of the sensor, takes N_SAMPLES measures and does the average. Then maps them between 0 and 1000
+		ArrayIR(unsigned char* _pins, char ledCalibrate = -1) 
+		//if calibration measures are given from outside: , unsigned int _white, unsigned int _black)
+		
 		int searchLine ();
 }

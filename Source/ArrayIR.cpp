@@ -6,13 +6,16 @@
 #include "ArrayIR.h"
 #include <math.h>
 
-void ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate ) //, unsigned int _white, unsigned int _black)
+//if no led pis is given it just wont blink
+void ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate ) 
+//if calibration measures are given from outside: , unsigned int _white, unsigned int _black)
 {
 	//white = _white;
 	//black = _black;
 
     white = 0;
     black = 0;
+
     Calibrate(ledCalibrate);
 
 	for (int i=0; i<DIM_ARRAY; i++)
@@ -20,8 +23,8 @@ void ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate ) //, unsigned in
 		pins[i]=_pins[i];
 	}
 
-    borderBlack = black - (std::abs(white-black)/6);
-    borderWhite = white + (std::abs(white-black)/6);
+    minBlack = black - (std::abs(white-black)/6);
+    minWhite = white + (std::abs(white-black)/6);
 }
 
 void ArrayIR::read ()
@@ -48,11 +51,11 @@ void ArrayIR::read ()
     }
 
     //map (var, lim1, lim1, med1, med2)
-     /* var = variable que queremos mapear
-     lim1 = limite inferior de la variable a mapear
-     lim2 = limite superior
-     med1 = limite inferior al que queremos llegar
-     med2 = limite superior al que queremos llegar
+     /* var = variable to map
+     lim1 = lower limit of the variable to map
+     lim2 = upper limit
+     med1 = lower limit we want to reach
+     med2 = upper limit we want to reach
      */
 }
 
@@ -64,7 +67,7 @@ int ArrayIR::searchLine ()
     //So that it can "remember" where the line was in case the robot loses it
     for (int i=0; i<DIM_ARRAY; i++)
     {
-        if(sensorValue[i] > borderBlack) {
+        if(sensorValue[i] > minBlack) {
             online = 1;
         }
 
@@ -86,13 +89,10 @@ int ArrayIR::searchLine ()
     if (online)
     {
         lastValue = num/dem;
-
-        /*
-         0*value0 + 1000*value1 + 2000*value2 + ... + (DIM_ARRAY-1)*1000*valueDIM_ARRAY
-        --------------------------------------------------------------------------------
-                    value0  +  value1  +  value2 + ... + valueDIM_ARRAY
-        */
-    }
+    } 
+// 0*value0 + 1000*value1 + 2000*value2 + ... + (DIM_ARRAY-1)*1000*valueDIM_ARRAY
+//--------------------------------------------------------------------------------
+//            value0  +  value1  +  value2 + ... + valueDIM_ARRAY
 
     return lastValue;
 }
