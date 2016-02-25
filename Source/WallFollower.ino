@@ -20,20 +20,20 @@ void setup()
  	pinMode (motor2fwd, OUTPUT);
  	pinMode (motor2bck, OUTPUT);
  	Serial.begin(9600);
-
- 	move (50, 50);
 }
 
 void loop()
 {
+	//If there's a wall in front, it tries to turn right, if there's another wall to the right, it turns to the left
 	if (readSensor(sensorfwd) < min_distance)
 	{
 		if (readSensor(sensorright) < min_distance)
-			move (-50, 50);
+			move (0, 50);
 		else
-			move (50, -50);
+			move (50, 0);
 	}
 
+	//If there is a right wall, it keeps going fordwards, otherwise, it turns right
 	else if (readSensor(sensorright) < min_distance)
 		move (0, 50);
 
