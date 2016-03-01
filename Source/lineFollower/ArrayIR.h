@@ -22,8 +22,8 @@ class ArrayIR {
 		//calibration must be done moving the robot with the array parallel to the line and movin it forward until LED stops blinking (in case ther's a LED)
 		//time needed can be calculated by multiplying N_SAMPLES X LECUTRE_TIME
 		//once finished LED will be on for 3000 ms 
-		void calibrate (char ledCalibrate);
-		void read ();
+		void calibrate(char ledCalibrate);
+		void read();
 
 	public:
 		~ArrayIR();
