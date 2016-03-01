@@ -4,50 +4,61 @@
  *******************************************/
 
 #include "ArrayIR.h"
-#include <math.h>
+#include "Arduino.h"
+
+#define LOW 0
+#define FALSE 0
+#define HIGH 1
+#define TRUE 1
 
 //if no led pis is given it just wont blink
-void ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate ) 
+ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate ) 
 //if calibration measures are given from outside: , unsigned int _white, unsigned int _black)
 {
+  int i;
 	//white = _white;
 	//black = _black;
 
     white = 0;
     black = 0;
 
-    Calibrate(ledCalibrate);
+    calibrate(ledCalibrate);
 
-	for (int i=0; i<DIM_ARRAY; i++)
+	for (i=0; i<DIM_ARRAY; i++)
 	{
 		pins[i]=_pins[i];
 	}
 
-    minBlack = black - (std::abs(white-black)/6);
-    minWhite = white + (std::abs(white-black)/6);
+    minBlack = black - (abs(white-black)/6);
+    minWhite = white + (abs(white-black)/6);
 }
+
+ArrayIR::~ArrayIR()
+{}
 
 void ArrayIR::read ()
 {
+
+  int i, j;
 	// reset the values
     for(int i = 0; i < DIM_ARRAY; i++)
         sensorValue[i] = 0;
 
     //Reads and adds N_SAMPLES measures
-    for(int i=0; i<N_SAMPLES;i++)
+    for(i=0; i<N_SAMPLES;i++)
     {
-    	for (int j=0; j<DIM_ARRAY; j++)
+    	for (j=0; j<DIM_ARRAY; j++)
     	{
-    		sensorValue[j] += analogRead (pin[j]);
+    		sensorValue[j] += analogRead (pins[j]);
     	}
     }
 
     //calculates the average, this will be the final value of the reading
     for (i = 0; i < DIM_ARRAY; i++)
     {
-        sensorValue[i] = map ( (sensorValue[i] / (int)N_SAMPLES), white, black,0,1000;
-        if (sensorValue[i]>1000) sensorValue=1000;
-        else if (sensorValue[i]<0) sensorValue=0;
+        sensorValue[i] = map ( (sensorValue[i] / (int)N_SAMPLES), white, black,0,1000);
+        if (sensorValue[i]>1000) sensorValue[i]=1000;
+        else if (sensorValue[i]<0) sensorValue[i]=0;
     }
 
     //map (var, lim1, lim1, med1, med2)
@@ -61,24 +72,27 @@ void ArrayIR::read ()
 
 int ArrayIR::searchLine ()
 {
-    char online=0;
-
+    char on_line=0;
+    long num; int dem;
+    int i;
+    
     //first checks if it is on the line, if not, the function returns the last valid result
     //So that it can "remember" where the line was in case the robot loses it
-    for (int i=0; i<DIM_ARRAY; i++)
+    for (i=0; i<DIM_ARRAY; i++)
     {
         if(sensorValue[i] > minBlack) {
-            online = 1;
+            on_line = 1;
         }
-
-        long num += (long)sensorValue * (i*1000);
-        int dem += sensorValue;
+        
+        
+        num += (long)sensorValue[i] * (i*1000);
+        dem += sensorValue[i];
     }
 
     if(!on_line)
     {
         // If it last read to the left of center, return 0 (corresponds with sensor 0).
-        if(_lastValue < (DIM_ARRAY-1)*1000/2)
+        if(lastValue < (DIM_ARRAY-1)*1000/2)
             return 0;
 
         // If it last read to the right of center, return the max (7000 which corresponds with sensor 7).
@@ -86,7 +100,7 @@ int ArrayIR::searchLine ()
             return (DIM_ARRAY-1)*1000;
     }
 
-    if (online)
+    if (on_line)
     {
         lastValue = num/dem;
     } 
@@ -99,7 +113,7 @@ int ArrayIR::searchLine ()
 
 
 //takes N_CALIBRATION measures for each sensor, then discards 10% higher and 10% lower
-void ArrayIR::Calibrate (char ledCalibrate)
+void ArrayIR::calibrate (char ledCalibrate)
 {
     int averageBlack[DIM_ARRAY];
     int averageWhite[DIM_ARRAY];
@@ -109,9 +123,10 @@ void ArrayIR::Calibrate (char ledCalibrate)
     int read[DIM_ARRAY][N_CALIBRATION];
     bool done;
 
+    int i,j;
     long tic, toc;
 
-    for (int j=0; j<N_CALIBRATION;j++)
+    for (j=0; j<N_CALIBRATION;j++)
     {
         tic = millis();
         toc = tic;
@@ -134,8 +149,8 @@ void ArrayIR::Calibrate (char ledCalibrate)
     {   
         done= TRUE;
         //values ​​are sorted
-        for (i=0; i<DIM_ARRAY; i++)
-            for (j=o; j<N_CALIBRATION; j++)
+        for (int i=0; i<DIM_ARRAY; i++)
+            for (j=0; j<N_CALIBRATION; j++)
             {
                 if (read[i][j]>read[i][j+1])
                 {
@@ -157,10 +172,10 @@ void ArrayIR::Calibrate (char ledCalibrate)
     //white value is calculated with measures from 10% to 30%
     //Black value is calculated with measures from 70% to 90%
     for (i=0; i<DIM_ARRAY;i++)
-        for (j=((int)(0.1*N_CALIBRATION)) ; j<((int)(0.3*N_CALIBRATION) ; j++)
+        for (j=((int)(0.1*N_CALIBRATION)) ; j<((int)(0.3*N_CALIBRATION)) ; j++)
         {
             averageWhite[i] += read[i][j];
-            averageBlack[i] += read[i][j+(int)0.6*N_CALIBRATION]
+            averageBlack[i] += read[i][j+(int)0.6*N_CALIBRATION];
         }
 
     for (i=0; i<DIM_ARRAY; i++)
@@ -198,7 +213,7 @@ void ArrayIR::Calibrate (char ledCalibrate)
         done= TRUE;
         //values ​​are sorted
         for (i=0; i<DIM_ARRAY; i++)
-            for (j=o; j<N_CALIBRATION; j++)
+            for (j=0; j<N_CALIBRATION; j++)
             {
                 if (read[i][j]>read[i][j+1])
                 {

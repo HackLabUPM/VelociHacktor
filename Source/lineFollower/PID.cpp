@@ -15,16 +15,18 @@
 int  derivative=0, proportional=0, integral=0; //parametros
 int  pwm_out=0, past_proportional=0;
 
-unsigned int position=0;
+unsigned int position;
 
-void pid (ArrayIR *array, int v1) //v1 is max velocity value, PID limits it so pwm is not over this value
+void move(int v1, int v2);
+
+void pid (ArrayIR array, int v1) //v1 is max velocity value, PID limits it so pwm is not over this value
 { 
 	
 	position = array.searchLine();
 
 	proportional = position - 3500; //center of the line is between sensor 3 and 4 -> 3500
 	integral += past_proportional;
-	derivative = (proportional - past_proportional)
+	derivative = (proportional - past_proportional);
 
 	if (integral>MAX_INTEGRAL) integral=MAX_INTEGRAL; //integral limited so to avoid problems
 	if (integral<-MAX_INTEGRAL) integral=-MAX_INTEGRAL;
