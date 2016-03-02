@@ -7,9 +7,9 @@
 
 #define DIM_ARRAY  8
 #define N_SAMPLES 5  //number of measures taken in read function, final value is the average 
-#define N_CALIBRATION 50 //number of measures taken in calibration function
+#define N_CALIBRATION 20 //number of measures taken in calibration function
 #define LECTURE_TIME 250 //ms of time in calibration for each lecture
-#define CALIB_CONFIRMATION 3000 //time led will be one once calibration is over
+#define CALIB_CONFIRMATION 3000 //time led will be on once calibration is over
 
 class ArrayIR { 
 	private:

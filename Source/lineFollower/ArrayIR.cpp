@@ -21,13 +21,13 @@ ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate )
 
     white = 0;
     black = 0;
-
+    
+    Serial.println("Hello1");
+    
     calibrate(ledCalibrate);
 
-	for (i=0; i<DIM_ARRAY; i++)
-	{
-		pins[i]=_pins[i];
-	}
+    for (i=0; i<DIM_ARRAY; i++)
+	pins[i]=_pins[i];
 
     minBlack = black - (abs(white-black)/6);
     minWhite = white + (abs(white-black)/6);
@@ -39,9 +39,12 @@ ArrayIR::~ArrayIR()
 void ArrayIR::read ()
 {
 
-  int i, j;
-	// reset the values
-    for(int i = 0; i < DIM_ARRAY; i++)
+    int i, j;
+    
+    Serial.println("Hello8");
+    
+    // reset the values
+    for(i = 0; i < DIM_ARRAY; i++)
         sensorValue[i] = 0;
 
     //Reads and adds N_SAMPLES measures
@@ -75,7 +78,10 @@ int ArrayIR::searchLine ()
     char on_line=0;
     long num; int dem;
     int i;
-    
+    Serial.println("Hello7");
+    read();
+    Serial.println("Sensor value:");
+    Serial.println(sensorValue[1]);
     //first checks if it is on the line, if not, the function returns the last valid result
     //So that it can "remember" where the line was in case the robot loses it
     for (i=0; i<DIM_ARRAY; i++)
@@ -107,7 +113,7 @@ int ArrayIR::searchLine ()
 // 0*value0 + 1000*value1 + 2000*value2 + ... + (DIM_ARRAY-1)*1000*valueDIM_ARRAY
 //--------------------------------------------------------------------------------
 //            value0  +  value1  +  value2 + ... + valueDIM_ARRAY
-
+    Serial.println("Hello9");
     return lastValue;
 }
 
@@ -124,26 +130,29 @@ void ArrayIR::calibrate (char ledCalibrate)
     bool done;
 
     int i,j;
-    long tic, toc;
+    long tic, toc = 0;
 
+    Serial.println("Hello2");
+    
+    tic = millis();
+    
     for (j=0; j<N_CALIBRATION;j++)
     {
+        while (toc - tic < LECTURE_TIME)
+          toc = millis();
+        
+        if (ledCalibrate!=-1)
+          digitalWrite(ledCalibrate, HIGH);
+          
+        for (int i=0; i<DIM_ARRAY; i++)
+            read[i][j]= analogRead(i);
+        
+        if (ledCalibrate!=-1)
+            digitalWrite(ledCalibrate, LOW);
         tic = millis();
-        toc = tic;
-        if (toc-tic > LECTURE_TIME)
-        {
-            if (ledCalibrate!=-1)
-                digitalWrite(ledCalibrate, HIGH);
-            for (int i=0; i<DIM_ARRAY; i++)
-            {
-                read[i][j]= analogRead(i);
-            }
-            if (ledCalibrate!=-1)
-                digitalWrite(ledCalibrate, LOW);
-
-        }
+        
     }
-
+    Serial.println("Hello3");
     done = FALSE; //check end of loop for
     while (!done)
     {   
@@ -161,7 +170,7 @@ void ArrayIR::calibrate (char ledCalibrate)
                 }
             }
     }
-
+    Serial.println("Hello4");
     for (i=0; i<DIM_ARRAY;i++) 
     {
         averageBlack[i]=0;
@@ -188,11 +197,11 @@ void ArrayIR::calibrate (char ledCalibrate)
     }
 
     tic = millis();
-    toc = tic;
-    while (tic-toc<CALIB_CONFIRMATION)
-        digitalWrite(ledCalibrate, HIGH);
+    digitalWrite(ledCalibrate, HIGH);
+    while (toc - tic < CALIB_CONFIRMATION)
+        toc = millis();
     digitalWrite(ledCalibrate, LOW);
-
+    Serial.println("Hello5");
     /*
     int average[DIM_ARRAY];
     int result[DIM_ARRAY];
