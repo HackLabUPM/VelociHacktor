@@ -11,7 +11,7 @@
 #define HIGH 1
 #define TRUE 1
 
-ArrayIR()
+ArrayIR::ArrayIR()
 {}
 
 ArrayIR::~ArrayIR()
@@ -146,18 +146,26 @@ void ArrayIR::calibrate (char ledCalibrate)
     
     for (j=0; j<N_CALIBRATION;j++)
     {
-        while (toc - tic < LECTURE_TIME)
+        
+        do{
           toc = millis();
+        }while (toc - tic < LECTURE_TIME);
+        
+        tic = millis();
         
         if (ledCalibrate!=-1)
           digitalWrite(ledCalibrate, HIGH);
           
-        for (int i=0; i<DIM_ARRAY; i++)
-            read[i][j]= analogRead(pins[i]);
+        for (int i=0; i<DIM_ARRAY; i++){
+            read[i][j] = analogRead(pins[i] - '0');
+            Serial.println("Pin:");
+            Serial.println(pins[i] - '0');
+            Serial.println("Analog Read:");
+            Serial.println(read[i][j]);
+      }
         
         if (ledCalibrate!=-1)
             digitalWrite(ledCalibrate, LOW);
-        tic = millis();
         
     }
     Serial.println("Hello3");
