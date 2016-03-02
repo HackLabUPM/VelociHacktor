@@ -1,6 +1,6 @@
 /*******************************************
- *		Author: Enrique Heredia Aguado     *
- *		Date: 21-02-2016				   *
+ *	Author: Enrique Heredia Aguado         *
+ *	Last Actualization Date: 02-03-2016	   *
  *******************************************/
 
 #include "ArrayIR.h"
@@ -11,8 +11,14 @@
 #define HIGH 1
 #define TRUE 1
 
+ArrayIR()
+{}
+
+ArrayIR::~ArrayIR()
+{}
+
 //if no led pis is given it just wont blink
-ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate ) 
+void ArrayIR::init (unsigned char* _pins, char ledCalibrate ) 
 //if calibration measures are given from outside: , unsigned int _white, unsigned int _black)
 {
   int i;
@@ -24,17 +30,15 @@ ArrayIR::ArrayIR (unsigned char* _pins, char ledCalibrate )
     
     Serial.println("Hello1");
     
-    calibrate(ledCalibrate);
-
     for (i=0; i<DIM_ARRAY; i++)
-	pins[i]=_pins[i];
+       pins[i]=_pins[i];
+
+    calibrate(ledCalibrate);
 
     minBlack = black - (abs(white-black)/6);
     minWhite = white + (abs(white-black)/6);
 }
 
-ArrayIR::~ArrayIR()
-{}
 
 void ArrayIR::read ()
 {
@@ -78,10 +82,14 @@ int ArrayIR::searchLine ()
     char on_line=0;
     long num; int dem;
     int i;
+
     Serial.println("Hello7");
+
     read();
+
     Serial.println("Sensor value:");
     Serial.println(sensorValue[1]);
+
     //first checks if it is on the line, if not, the function returns the last valid result
     //So that it can "remember" where the line was in case the robot loses it
     for (i=0; i<DIM_ARRAY; i++)
@@ -145,7 +153,7 @@ void ArrayIR::calibrate (char ledCalibrate)
           digitalWrite(ledCalibrate, HIGH);
           
         for (int i=0; i<DIM_ARRAY; i++)
-            read[i][j]= analogRead(i);
+            read[i][j]= analogRead(pins[i]);
         
         if (ledCalibrate!=-1)
             digitalWrite(ledCalibrate, LOW);

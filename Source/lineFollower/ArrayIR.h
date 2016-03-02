@@ -1,6 +1,6 @@
 /*******************************************
- *		Author: Enrique Heredia Aguado     *
- *		Date: 21-02-2016				   *
+ *	Author: Enrique Heredia Aguado         *
+ *	Last Actualization Date: 02-03-2016	   *
  *******************************************/
 
 // Class to manage the use of the Array of 8 IR sensors to follow a black line
@@ -27,7 +27,9 @@ class ArrayIR {
 
 	public:
 		~ArrayIR();
-		ArrayIR(unsigned char* _pins, char ledCalibrate = -1);
+		ArrayIR();
+
+		void init (unsigned char* _pins, char ledCalibrate = -1);
 		//if calibration measures are given from outside: , unsigned int _white, unsigned int _black)
 
 		int searchLine ();

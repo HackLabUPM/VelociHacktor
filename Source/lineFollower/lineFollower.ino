@@ -13,7 +13,7 @@ typedef struct
 
 //DECLARATIONS
 unsigned char pinArray[] = "01234567";
-ArrayIR array(pinArray, ledCalibration);
+ArrayIR array;
 motor m1 = {10, 11}, m2 = {8, 9}; //4 ->IN3, 4 ->IN4, 10 ->IN1, 11 ->IN2
 int v = 50;  //Rated velocity
 
@@ -25,6 +25,7 @@ void setup()
         pinMode(22, OUTPUT); //To use as 5V
         digitalWrite(22, HIGH);
         Serial.begin(19200);
+    array.init(pinArray, ledCalibration);
 }
 
 void loop()

@@ -1,7 +1,8 @@
 /*******************************************
- *		Author: Enrique Heredia Aguado     *
- *		Date: 24-02-2016				   *
+ *	Author: Enrique Heredia Aguado         *
+ *	Last Actualization Date: 02-03-2016	   *
  *******************************************/
+ 
 #include "Arduino.h"
 #include "ArrayIR.h"
 #include "PID.h"

@@ -1,6 +1,6 @@
 /*******************************************
- *		Author: Enrique Heredia Aguado     *
- *		Date: 24-02-2016				   *
+ *	Author: Enrique Heredia Aguado         *
+ *	Last Actualization Date: 02-03-2016	   *
  *******************************************/
 
 #define MAX_INTEGRAL 1000
