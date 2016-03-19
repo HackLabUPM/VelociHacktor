@@ -5,3 +5,7 @@ This the line follower that we are developing in [HackLab](http://hacklabupm.bq.
 # License 
 
 This robot is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/). Please read the LICENSE files for more details.
+
+<p align="center">
+<img src="by-sa.png" width="200" align = "center">
+</p>
